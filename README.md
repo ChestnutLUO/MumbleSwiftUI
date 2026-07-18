@@ -18,8 +18,9 @@ planned for older servers.
 
 ## Building
 
-Prerequisites: Xcode 26+, `brew install opus` (protobuf/xcodegen only
-needed when regenerating).
+Prerequisites: Xcode 26+. No Homebrew dependencies — libopus is
+vendored and compiled from source for macOS, iOS, and simulator
+(protobuf/xcodegen only needed when regenerating).
 
 **App**: open `App/MumbleSwiftUI.xcodeproj`, scheme `MumbleSwiftUI`, ⌘R.
 The project is generated from `App/project.yml` — edit that and rerun
@@ -59,4 +60,6 @@ BSD 3-Clause (see `LICENSE`). Portions derived from the BSD-licensed
 OCB2-AES128 implementation and the vendored protocol definitions.
 `MumbleCore/Vendor/swift-protobuf` is Apple's
 [swift-protobuf](https://github.com/apple/swift-protobuf) (Apache-2.0),
-vendored unmodified.
+vendored unmodified. `MumbleCore/Vendor/opus` is
+[libopus 1.5.2](https://opus-codec.org) (BSD-3-Clause), vendored with
+docs/tests/DNN models stripped.

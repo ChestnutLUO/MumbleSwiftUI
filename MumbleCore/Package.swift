@@ -34,12 +34,38 @@ let package = Package(
         .target(
             name: "MumbleCrypto"
         ),
-        // Homebrew libopus for macOS development; iOS builds will need a
-        // vendored/xcframework Opus later.
-        .systemLibrary(
+        // libopus 1.5.2 compiled from vendored source so every Apple
+        // platform (macOS, iOS, simulator) builds without Homebrew.
+        // Plain-C paths only: arch-specific dirs are excluded, float build.
+        .target(
             name: "COpus",
-            pkgConfig: "opus",
-            providers: [.brew(["opus"])]
+            path: "Vendor/opus",
+            exclude: [
+                "src/opus_demo.c",
+                "src/opus_compare.c",
+                "src/repacketizer_demo.c",
+                "src/meson.build",
+                "celt/arm", "celt/mips", "celt/tests", "celt/x86",
+                "celt/opus_custom_demo.c",
+                "celt/meson.build",
+                "silk/arm", "silk/fixed", "silk/mips", "silk/tests", "silk/x86",
+                "silk/float/x86",
+                "silk/meson.build",
+            ],
+            sources: ["src", "celt", "silk"],
+            publicHeadersPath: "include",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("include"),
+                .headerSearchPath("celt"),
+                .headerSearchPath("silk"),
+                .headerSearchPath("silk/float"),
+                .define("OPUS_BUILD"),
+                .define("FLOATING_POINT"),
+                .define("VAR_ARRAYS", to: "1"),
+                .define("HAVE_LRINT", to: "1"),
+                .define("HAVE_LRINTF", to: "1"),
+            ]
         ),
         .target(
             name: "MumbleAudio",

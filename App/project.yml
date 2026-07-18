@@ -30,8 +30,6 @@ targets:
         INFOPLIST_KEY_NSMicrophoneUsageDescription: "MumbleSwiftUI uses the microphone to transmit your voice to the Mumble server."
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         GENERATE_INFOPLIST_FILE: true
-        # Homebrew libopus (MumbleCore's COpus system library).
-        LIBRARY_SEARCH_PATHS: "$(inherited) /opt/homebrew/lib"
       configs:
         Debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
