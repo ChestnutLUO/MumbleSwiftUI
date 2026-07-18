@@ -97,13 +97,7 @@ public final class MumbleUDPVoiceTransport: @unchecked Sendable {
     }
 
     public func send(_ packet: MumbleVoicePacket) async throws {
-        let plaintext: Data
-        switch packet {
-        case .audio(let audio):
-            plaintext = try prefixed(.audio, try audio.serializedData())
-        case .ping(let ping):
-            plaintext = try prefixed(.ping, try ping.serializedData())
-        }
+        let plaintext = try Self.encodePlaintext(packet)
 
         let wire = queue.sync { crypt.encrypt(plaintext) }
         guard let wire else { throw MumbleTransportError.connectionFailed("encrypt failed") }
@@ -130,6 +124,17 @@ public final class MumbleUDPVoiceTransport: @unchecked Sendable {
         incomingContinuation.finish()
     }
 
+    /// Encodes a packet to a plaintext datagram for the TCP `UDPTunnel`
+    /// fallback (the UDP path encrypts this same layout).
+    public static func encodePlaintext(_ packet: MumbleVoicePacket) throws -> Data {
+        switch packet {
+        case .audio(let audio):
+            return Self.prefixed(.audio, try audio.serializedData())
+        case .ping(let ping):
+            return Self.prefixed(.ping, try ping.serializedData())
+        }
+    }
+
     /// Decodes a plaintext voice datagram — shared by the UDP path (after
     /// decryption) and the TCP `UDPTunnel` fallback (arrives unencrypted).
     public static func decodePlaintext(_ datagram: Data) -> MumbleVoicePacket? {
@@ -149,7 +154,7 @@ public final class MumbleUDPVoiceTransport: @unchecked Sendable {
 
     // MARK: - Internals
 
-    private func prefixed(_ type: UDPMessageType, _ payload: Data) throws -> Data {
+    private static func prefixed(_ type: UDPMessageType, _ payload: Data) -> Data {
         var data = Data(capacity: payload.count + 1)
         data.append(type.rawValue)
         data.append(payload)

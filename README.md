@@ -4,17 +4,27 @@ A native Mumble client for Apple platforms, built with SwiftUI. Targets the
 Mumble 1.5 protocol (protobuf UDP voice, Opus-only) with legacy fallback
 planned for older servers.
 
+## Features
+
+- TLS control channel with trust-on-first-use certificate pinning
+- Two-way voice: OCB2-AES128 encrypted UDP with automatic TCP-tunnel
+  fallback and crypt resync; Opus 48 kHz, per-speaker jitter buffers
+- Transmit modes: continuous, voice activity (adjustable threshold with
+  live meter), push-to-talk
+- Self mute/deafen, per-user local mute, speaking indicators
+- Channel tree: join, create channels; channel and private text chat
+
 ## Layout
 
 - `MumbleCore/` — SwiftPM package, UI-independent:
   - `MumbleProtocol` — vendored `.proto` definitions, generated Swift
     protobufs, Mumble varint codec, TCP control-channel framing.
-  - (planned) `MumbleCrypto` — OCB2-AES128 for the UDP voice channel.
-  - (planned) `MumbleConnection` — Network.framework TLS + UDP transport,
+  - `MumbleCrypto` — OCB2-AES128 for the UDP voice channel.
+  - `MumbleConnection` — Network.framework TLS + UDP transport,
     session state machine.
-  - (planned) `MumbleAudio` — Opus encode/decode, AVAudioEngine I/O,
-    jitter buffer.
-- (planned) `App/` — the SwiftUI multiplatform app.
+  - `MumbleAudio` — Opus encode/decode (vendored libopus), mic capture,
+    AVAudioEngine playback, jitter buffer, voice activity detection.
+- `App/` — the SwiftUI app (macOS; iOS target planned).
 
 ## Building
 

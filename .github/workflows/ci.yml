@@ -14,7 +14,7 @@ jobs:
     name: MumbleCore tests (macOS)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Show toolchain
         run: |
           xcodebuild -version
@@ -27,7 +27,7 @@ jobs:
     name: MumbleCore build (iOS)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build all products for iOS
         working-directory: MumbleCore
         run: |
@@ -43,7 +43,7 @@ jobs:
     name: App build (macOS)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build MumbleSwiftUI.app
         run: |
           xcodebuild build \

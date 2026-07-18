@@ -24,6 +24,22 @@ struct ChatView: View {
 
             Divider()
 
+            if case .user(_, let name) = controller.chatTarget {
+                HStack(spacing: 6) {
+                    Label("Private message to \(name)", systemImage: "envelope")
+                        .font(.caption)
+                        .foregroundStyle(.purple)
+                    Spacer()
+                    Button("Back to channel") {
+                        controller.chatTarget = .currentChannel
+                    }
+                    .buttonStyle(.link)
+                    .font(.caption)
+                }
+                .padding(.horizontal, 10)
+                .padding(.top, 8)
+            }
+
             HStack(spacing: 8) {
                 TextField("Message", text: $draft, prompt: Text(prompt))
                     .textFieldStyle(.plain)
@@ -46,7 +62,10 @@ struct ChatView: View {
     }
 
     private var prompt: String {
-        "Message \(channelName)"
+        switch controller.chatTarget {
+        case .currentChannel: "Message \(channelName)"
+        case .user(_, let name): "Message \(name) privately"
+        }
     }
 
     private func send() {
@@ -63,6 +82,13 @@ private struct MessageRow: View {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(message.senderName)
                     .font(.caption.bold())
+                if message.privateWith != nil {
+                    Text("private")
+                        .font(.caption2)
+                        .padding(.horizontal, 4)
+                        .background(.purple.opacity(0.2), in: Capsule())
+                        .foregroundStyle(.purple)
+                }
                 Text(message.date, style: .time)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)

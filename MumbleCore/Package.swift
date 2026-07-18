@@ -67,9 +67,15 @@ let package = Package(
                 .define("HAVE_LRINTF", to: "1"),
             ]
         ),
+        // Non-variadic wrappers around opus_*_ctl (Swift can't call C
+        // variadics), kept out of the vendored opus tree.
+        .target(
+            name: "COpusShim",
+            dependencies: ["COpus"]
+        ),
         .target(
             name: "MumbleAudio",
-            dependencies: ["COpus", "MumbleProtocol"]
+            dependencies: ["COpus", "COpusShim", "MumbleProtocol"]
         ),
         .testTarget(
             name: "MumbleAudioTests",

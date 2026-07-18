@@ -140,31 +140,34 @@ struct IntegrationTests {
         let frameCount = 20
         let samplesPerFrame = 960  // 20 ms
 
-        // Collector must be listening before we send.
+        // Collector must be listening before we send. The terminator
+        // packet arrives as one extra frame after the audio.
         let received = Task { () -> [MumbleUDP_Audio] in
             var audio: [MumbleUDP_Audio] = []
             for await packet in transport.incoming {
                 if case .audio(let frame) = packet {
                     audio.append(frame)
-                    if audio.count == frameCount { break }
+                    if frame.isTerminator || audio.count == frameCount + 1 { break }
                 }
             }
             return audio
         }
 
-        let encoder = try OpusVoiceEncoder()
+        // The app's actual send path: capture-sized PCM through
+        // VoiceTransmitPipeline (aggregation, Opus, frame numbering).
+        let sendPipeline = try VoiceTransmitPipeline(frameSamples: samplesPerFrame)
         for n in 0..<frameCount {
             let pcm = (0..<samplesPerFrame).map { i in
                 0.5 * sin(2 * .pi * 440 * Float(n * samplesPerFrame + i) / 48_000)
             }
-            var audio = MumbleUDP_Audio()
-            audio.target = 31  // server loopback
-            audio.frameNumber = UInt64(n)
-            audio.opusData = try encoder.encode(pcm)
-            audio.isTerminator = n == frameCount - 1
-            try await transport.send(.audio(audio))
+            for packet in try sendPipeline.encode(pcm, target: 31) {  // 31 = server loopback
+                try await transport.send(.audio(packet))
+            }
             // Pace like a real client so the server doesn't drop us.
             try await Task.sleep(for: .milliseconds(20))
+        }
+        if let terminator = try sendPipeline.endTransmission(target: 31) {
+            try await transport.send(.audio(terminator))
         }
 
         let echoed = await withTaskGroup(of: [MumbleUDP_Audio]?.self) { group in
@@ -180,7 +183,8 @@ struct IntegrationTests {
         }
 
         let frames = try #require(echoed, "no loopback audio received within 10s")
-        #expect(frames.count == frameCount)
+        #expect(frames.count >= frameCount)
+        #expect(frames.last?.isTerminator == true)
         // Loopback packets echo back marked with our own session.
         #expect(frames.allSatisfy { $0.senderSession == info.sessionID })
 

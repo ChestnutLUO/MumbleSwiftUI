@@ -1,10 +1,12 @@
 import COpus
+import COpusShim
 import Foundation
 
 public enum OpusError: Error, Sendable {
     case creationFailed(Int32)
     case decodeFailed(Int32)
     case encodeFailed(Int32)
+    case invalidFrameSize(Int)
 }
 
 /// Mumble voice is Opus at 48 kHz mono; playback may upmix locally.
@@ -20,7 +22,7 @@ public enum MumbleAudioConstants {
 /// One decoder per speaking user (Opus decoders are stateful across a
 /// stream). Not thread-safe; confine to the speaker's pipeline.
 public final class OpusVoiceDecoder {
-    private var decoder: OpaquePointer
+    private let decoder: OpaquePointer
     /// Samples in the last successfully decoded packet, used to size
     /// packet-loss concealment output.
     private var lastFrameSamples = MumbleAudioConstants.samplesPer10ms * 2
@@ -69,27 +71,18 @@ public final class OpusVoiceDecoder {
 
     /// Resets decoder state between transmissions (after a terminator).
     public func reset() {
-        // OPUS_RESET_STATE is a variadic ctl macro Swift can't call;
-        // recreating costs little and only happens at end-of-transmission.
-        var error: Int32 = 0
-        if let fresh = opus_decoder_create(
-            Int32(MumbleAudioConstants.sampleRate),
-            Int32(MumbleAudioConstants.channels),
-            &error
-        ), error == OPUS_OK {
-            opus_decoder_destroy(decoder)
-            decoder = fresh
-        }
+        mumble_opus_decoder_reset(decoder)
     }
 }
 
-/// Voice-tuned Opus encoder (used for the send path and tests). Library
-/// defaults are sensible for VoIP; bitrate ctl needs a C shim (variadic)
-/// and lands with the send-path work.
+/// Voice-tuned Opus encoder for the send path. Not thread-safe; confine
+/// to the transmit pipeline.
 public final class OpusVoiceEncoder {
     private let encoder: OpaquePointer
 
-    public init() throws {
+    /// - Parameter bitrate: target bits/second (Mumble's usual range is
+    ///   24k–96k; upstream defaults to ~64k with VBR on).
+    public init(bitrate: Int = 64_000) throws {
         var error: Int32 = 0
         guard
             let encoder = opus_encoder_create(
@@ -100,6 +93,29 @@ public final class OpusVoiceEncoder {
             ), error == OPUS_OK
         else { throw OpusError.creationFailed(error) }
         self.encoder = encoder
+        mumble_opus_encoder_set_signal_voice(encoder)
+        mumble_opus_encoder_set_vbr(encoder, 1)
+        mumble_opus_encoder_set_bitrate(encoder, opus_int32(bitrate))
+        // Tolerate mild UDP loss without retransmission.
+        mumble_opus_encoder_set_inband_fec(encoder, 1)
+        mumble_opus_encoder_set_packet_loss_perc(encoder, 15)
+    }
+
+    /// Current target bitrate in bits/second.
+    public var bitrate: Int {
+        var value: opus_int32 = 0
+        mumble_opus_encoder_get_bitrate(encoder, &value)
+        return Int(value)
+    }
+
+    /// Changes the target bitrate mid-stream (takes effect next frame).
+    public func setBitrate(_ bitsPerSecond: Int) {
+        mumble_opus_encoder_set_bitrate(encoder, opus_int32(bitsPerSecond))
+    }
+
+    /// Resets encoder state between transmissions.
+    public func reset() {
+        mumble_opus_encoder_reset(encoder)
     }
 
     deinit {

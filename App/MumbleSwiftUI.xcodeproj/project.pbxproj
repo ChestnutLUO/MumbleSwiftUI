@@ -12,23 +12,25 @@
 		259584BC6C47689407D9707A /* MumbleCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = A74C3610994746E1F86A1013 /* MumbleCrypto */; };
 		2FA6FE829DF070C78468DA72 /* ServerConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */; };
 		3651AED00FDE7AF26DA4B1D2 /* MumbleProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 42254C990CEF5AC110020396 /* MumbleProtocol */; };
+		39D33F35A2AE9EB4D781C87F /* AudioSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7D484FA394E3A10349CE6 /* AudioSettingsView.swift */; };
 		5F02466087C81D80336DC35E /* ChannelTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */; };
 		76ACFA8926EFBD78590FA8F2 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A09A1C577D99A683AE84E6 /* ChatView.swift */; };
 		8067DAC426CC455CCE685679 /* MumbleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66877DAA4F479D3351BD59B /* MumbleSwiftUIApp.swift */; };
 		B2E39BB96FF383D207E15165 /* MumbleAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D937D87D15CAA626C120A466 /* MumbleAudio */; };
+		C8D9A0F96A9F65F8345B9A2B /* VoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5AA59146988AD5FD772C88 /* VoiceController.swift */; };
 		E5E01621698469BE985C1125 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4981B820FE7F81C86F59A37 /* SessionController.swift */; };
-		ED6BC150C7901C68DE9C75EA /* VoiceReceiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2C985DAE52479B3910998FD3 /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
 		30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnectView.swift; sourceTree = "<group>"; };
 		6E6C45B31D9CA1389AE69E38 /* MumbleCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MumbleCore; path = ../MumbleCore; sourceTree = SOURCE_ROOT; };
-		7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReceiveController.swift; sourceTree = "<group>"; };
 		A66877DAA4F479D3351BD59B /* MumbleSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MumbleSwiftUIApp.swift; sourceTree = "<group>"; };
 		AED926DD077B0EACBA7CEB27 /* MumbleSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MumbleSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9A09A1C577D99A683AE84E6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTreeView.swift; sourceTree = "<group>"; };
+		D3E7D484FA394E3A10349CE6 /* AudioSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSettingsView.swift; sourceTree = "<group>"; };
+		DD5AA59146988AD5FD772C88 /* VoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceController.swift; sourceTree = "<group>"; };
 		F4981B820FE7F81C86F59A37 /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +62,7 @@
 		46DB9DDA6EF2024AFBF16D54 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D3E7D484FA394E3A10349CE6 /* AudioSettingsView.swift */,
 				BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */,
 				B9A09A1C577D99A683AE84E6 /* ChatView.swift */,
 				30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */,
@@ -88,7 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				F4981B820FE7F81C86F59A37 /* SessionController.swift */,
-				7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */,
+				DD5AA59146988AD5FD772C88 /* VoiceController.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -135,6 +138,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 99D9D62C1AF74C8D04863E9E /* Build configuration list for PBXProject "MumbleSwiftUI" */;
 			developmentRegion = en;
@@ -163,13 +168,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D33F35A2AE9EB4D781C87F /* AudioSettingsView.swift in Sources */,
 				5F02466087C81D80336DC35E /* ChannelTreeView.swift in Sources */,
 				76ACFA8926EFBD78590FA8F2 /* ChatView.swift in Sources */,
 				8067DAC426CC455CCE685679 /* MumbleSwiftUIApp.swift in Sources */,
 				2FA6FE829DF070C78468DA72 /* ServerConnectView.swift in Sources */,
 				E5E01621698469BE985C1125 /* SessionController.swift in Sources */,
 				0BC2F5F8F88F3B9321840819 /* SessionView.swift in Sources */,
-				ED6BC150C7901C68DE9C75EA /* VoiceReceiveController.swift in Sources */,
+				C8D9A0F96A9F65F8345B9A2B /* VoiceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,11 +306,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MumbleSwiftUI.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A6D6N85PG5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -313,18 +317,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/lib,
-				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.a5-p.MumbleSwiftUI";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
 				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
@@ -333,11 +329,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MumbleSwiftUI.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = A6D6N85PG5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -346,19 +340,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/lib,
-				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.a5-p.MumbleSwiftUI";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
 				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};

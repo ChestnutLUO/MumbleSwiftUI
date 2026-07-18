@@ -1,3 +1,4 @@
+import AVFoundation
 import Foundation
 import MumbleConnection
 import MumbleProtocol
@@ -8,11 +9,13 @@ struct ChatMessage: Identifiable, Equatable {
     let senderName: String
     let text: String
     let date: Date
+    /// Non-nil for private (user-to-user) messages: who the exchange is with.
+    var privateWith: String?
 }
 
 /// Bridges one MumbleSession to SwiftUI: connection lifecycle,
 /// trust-on-first-use certificate pinning, live server state, chat,
-/// and voice-receive playback.
+/// and two-way voice.
 @Observable @MainActor
 final class SessionController {
     enum Status: Equatable {
@@ -22,14 +25,28 @@ final class SessionController {
         case failed(String)
     }
 
+    /// Target of outgoing chat: the current channel, or one user.
+    enum ChatTarget: Equatable {
+        case currentChannel
+        case user(sessionID: UInt32, name: String)
+    }
+
     private(set) var status: Status = .disconnected
     private(set) var serverState = MumbleServerState()
     private(set) var syncInfo: MumbleServerSyncInfo?
     private(set) var chat: [ChatMessage] = []
     private(set) var speakingSessions: Set<UInt32> = []
+    private(set) var locallyMuted: Set<UInt32> = []
+
+    // Self voice state.
+    private(set) var selfMuted = false
+    private(set) var selfDeafened = false
+    private(set) var transmitting = false
+    private(set) var inputLevelDB: Float = -100
+    var chatTarget: ChatTarget = .currentChannel
 
     private var session: MumbleSession?
-    private var voice: VoiceReceiveController?
+    private var voice: VoiceController?
     private var eventTask: Task<Void, Never>?
 
     var ownUser: MumbleUser? {
@@ -69,13 +86,7 @@ final class SessionController {
                 UserDefaults.standard.set(observed, forKey: pinKey)
             }
 
-            let voice = VoiceReceiveController()
-            if let cryptSetup = await session.cryptSetup {
-                await voice.start(host: host, port: port, cryptSetup: cryptSetup) { [weak self] speaking in
-                    Task { @MainActor in self?.speakingSessions = speaking }
-                }
-            }
-            self.voice = voice
+            await startVoice(session: session, host: host, port: port)
 
             status = .connected
             observeEvents(of: session)
@@ -91,6 +102,36 @@ final class SessionController {
         }
     }
 
+    private func startVoice(session: MumbleSession, host: String, port: UInt16) async {
+        guard let cryptSetup = await session.cryptSetup else { return }
+
+        // Transmit needs the mic; a denial leaves the session receive-only.
+        _ = await AVCaptureDevice.requestAccess(for: .audio)
+
+        let voice = VoiceController(settings: AudioPreferences.load())
+        await voice.start(
+            host: host,
+            port: port,
+            cryptSetup: cryptSetup,
+            sendTunnel: { datagram in
+                try? await session.sendVoiceTunnel(datagram)
+            },
+            requestCryptResync: {
+                try? await session.requestCryptResync()
+            },
+            onSpeakingChanged: { [weak self] speaking in
+                Task { @MainActor in self?.speakingSessions = speaking }
+            },
+            onSelfActivity: { [weak self] level, transmitting in
+                Task { @MainActor in
+                    self?.inputLevelDB = level
+                    self?.transmitting = transmitting
+                }
+            }
+        )
+        self.voice = voice
+    }
+
     func disconnect() async {
         eventTask?.cancel()
         eventTask = nil
@@ -103,8 +144,60 @@ final class SessionController {
         syncInfo = nil
         chat = []
         speakingSessions = []
+        locallyMuted = []
+        selfMuted = false
+        selfDeafened = false
+        transmitting = false
+        chatTarget = .currentChannel
         serverState = MumbleServerState()
         status = .disconnected
+    }
+
+    // MARK: - Voice controls
+
+    func toggleSelfMute() {
+        // Unmuting also undeafens (you can't stay deafened while unmuted).
+        selfMuted
+            ? setSelf(muted: false, deafened: false)
+            : setSelf(muted: true, deafened: selfDeafened)
+    }
+
+    func toggleSelfDeafen() {
+        setSelf(muted: selfMuted, deafened: !selfDeafened)
+    }
+
+    private func setSelf(muted: Bool, deafened: Bool) {
+        // Deafen implies mute; undeafening restores unmuted (upstream UX).
+        let muted = muted || deafened
+        selfMuted = muted
+        selfDeafened = deafened
+        guard let session, let voice else { return }
+        Task {
+            await voice.setTransmitMuted(muted)
+            await voice.setDeafened(deafened)
+            try? await session.setSelfMute(muted, deafen: deafened)
+        }
+    }
+
+    func setPTTPressed(_ pressed: Bool) {
+        guard let voice else { return }
+        Task { await voice.setPTTPressed(pressed) }
+    }
+
+    func setLocalMute(_ sessionID: UInt32, muted: Bool) {
+        if muted {
+            locallyMuted.insert(sessionID)
+        } else {
+            locallyMuted.remove(sessionID)
+        }
+        guard let voice else { return }
+        Task { await voice.setLocalMute(sessionID, muted: muted) }
+    }
+
+    func applyAudioPreferences() {
+        guard let voice else { return }
+        let settings = AudioPreferences.load()
+        Task { await voice.apply(settings) }
     }
 
     // MARK: - Actions
@@ -116,15 +209,34 @@ final class SessionController {
         }
     }
 
+    func createChannel(name: String, parentID: UInt32) {
+        guard let session, !name.isEmpty else { return }
+        Task {
+            try? await session.createChannel(name: name, parentID: parentID)
+        }
+    }
+
     func sendChat(_ text: String) {
         guard let session, !text.isEmpty else { return }
-        let channelID = ownUser?.channelID ?? 0
-        chat.append(
-            ChatMessage(
-                senderName: ownUser?.name ?? "me", text: text, date: Date()))
-        Task {
-            try? await session.sendTextMessage(text, toChannel: channelID)
+        let me = ownUser?.name ?? "me"
+        switch chatTarget {
+        case .currentChannel:
+            let channelID = ownUser?.channelID ?? 0
+            chat.append(ChatMessage(senderName: me, text: text, date: Date()))
+            Task {
+                try? await session.sendTextMessage(text, toChannel: channelID)
+            }
+        case .user(let sessionID, let name):
+            chat.append(
+                ChatMessage(senderName: me, text: text, date: Date(), privateWith: name))
+            Task {
+                try? await session.sendPrivateMessage(text, toUser: sessionID)
+            }
         }
+    }
+
+    func startPrivateChat(with user: MumbleUser) {
+        chatTarget = .user(sessionID: user.id, name: user.name)
     }
 
     // MARK: - Events
@@ -136,19 +248,20 @@ final class SessionController {
                 switch event {
                 case .serverStateChanged(let state):
                     self.serverState = state
+                    self.reflectOwnUserState()
                 case .textMessage(let message):
-                    let sender = message.hasActor
-                        ? self.serverState.users[message.actor]?.name ?? "user \(message.actor)"
-                        : "server"
-                    self.chat.append(
-                        ChatMessage(senderName: sender, text: message.message, date: Date()))
+                    self.receiveText(message)
                 case .voiceTunnel(let datagram):
                     self.voice?.receiveTunneled(datagram)
+                case .cryptSetupChanged(let cryptSetup):
+                    if let voice = self.voice {
+                        Task { await voice.updateCrypt(cryptSetup) }
+                    }
                 case .permissionDenied(let denied):
                     self.chat.append(
                         ChatMessage(
                             senderName: "server",
-                            text: "Permission denied: \(denied.type)",
+                            text: "Permission denied: \(Self.describe(denied))",
                             date: Date()))
                 case .disconnected(let error):
                     self.status = .failed(error.map { $0.localizedDescription } ?? "Disconnected")
@@ -156,6 +269,46 @@ final class SessionController {
                     return
                 }
             }
+        }
+    }
+
+    private func receiveText(_ message: MumbleProto_TextMessage) {
+        let sender = message.hasActor
+            ? serverState.users[message.actor]?.name ?? "user \(message.actor)"
+            : "server"
+        // A message addressed to our session (not a channel) is private.
+        let isPrivate = !message.session.isEmpty && message.channelID.isEmpty
+            && message.treeID.isEmpty
+        chat.append(
+            ChatMessage(
+                senderName: sender,
+                text: message.message,
+                date: Date(),
+                privateWith: isPrivate ? sender : nil))
+    }
+
+    /// Mirrors server-echoed self mute/deafen (e.g. changed by an admin).
+    private func reflectOwnUserState() {
+        guard let own = ownUser else { return }
+        if own.isSelfMuted != selfMuted || own.isSelfDeafened != selfDeafened {
+            selfMuted = own.isSelfMuted
+            selfDeafened = own.isSelfDeafened
+            guard let voice else { return }
+            Task {
+                await voice.setTransmitMuted(own.isSelfMuted || own.isMuted)
+                await voice.setDeafened(own.isSelfDeafened)
+            }
+        }
+    }
+
+    private static func describe(_ denied: MumbleProto_PermissionDenied) -> String {
+        switch denied.type {
+        case .permission: "insufficient permission"
+        case .channelName: "invalid channel name"
+        case .textTooLong: "message too long"
+        case .temporaryChannel: "not allowed from a temporary channel"
+        case .channelFull: "channel is full"
+        default: "\(denied.type)"
         }
     }
 
@@ -172,5 +325,28 @@ final class SessionController {
         case .alreadyConnected:
             "Already connected"
         }
+    }
+}
+
+/// Audio preferences persisted in UserDefaults (edited by the settings UI).
+enum AudioPreferences {
+    static let modeKey = "audio.transmitMode"
+    static let bitrateKey = "audio.bitrate"
+    static let vadThresholdKey = "audio.vadThresholdDB"
+
+    static func load() -> VoiceSettings {
+        let defaults = UserDefaults.standard
+        var settings = VoiceSettings()
+        if let raw = defaults.string(forKey: modeKey), let mode = TransmitMode(rawValue: raw) {
+            settings.mode = mode
+        }
+        let bitrate = defaults.integer(forKey: bitrateKey)
+        if bitrate > 0 {
+            settings.bitrate = bitrate
+        }
+        if defaults.object(forKey: vadThresholdKey) != nil {
+            settings.vadOpenThresholdDB = defaults.float(forKey: vadThresholdKey)
+        }
+        return settings
     }
 }

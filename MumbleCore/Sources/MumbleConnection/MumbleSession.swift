@@ -64,6 +64,9 @@ public enum MumbleSessionEvent: Sendable {
     /// A voice datagram tunneled over TCP (`UDPTunnel`) — plaintext, same
     /// format as a decrypted UDP packet. Arrives when UDP is blocked.
     case voiceTunnel(Data)
+    /// CryptSetup changed after the handshake (key replacement or a
+    /// nonce-only resync); the merged, full setup is attached.
+    case cryptSetupChanged(MumbleProto_CryptSetup)
     /// Connection ended; nil error means a clean disconnect.
     case disconnected(Error?)
 }
@@ -188,6 +191,46 @@ public actor MumbleSession {
         try await send(.userState(userState))
     }
 
+    public func sendPrivateMessage(_ text: String, toUser sessionID: UInt32) async throws {
+        var message = MumbleProto_TextMessage()
+        message.session = [sessionID]
+        message.message = text
+        try await send(.textMessage(message))
+    }
+
+    /// Requests creation of a permanent sub-channel; the server replies
+    /// with ChannelState (success) or PermissionDenied.
+    public func createChannel(name: String, parentID: UInt32) async throws {
+        var channel = MumbleProto_ChannelState()
+        channel.parent = parentID
+        channel.name = name
+        channel.temporary = false
+        try await send(.channelState(channel))
+    }
+
+    /// Announces self-mute/deafen; the server echoes it back via UserState.
+    /// Deafening implies muting (upstream semantics).
+    public func setSelfMute(_ mute: Bool, deafen: Bool) async throws {
+        guard let sessionID = syncInfo?.sessionID else { return }
+        var userState = MumbleProto_UserState()
+        userState.session = sessionID
+        userState.selfMute = mute || deafen
+        userState.selfDeaf = deafen
+        try await send(.userState(userState))
+    }
+
+    /// Sends one plaintext voice datagram through the TCP `UDPTunnel`
+    /// fallback (same format as a decrypted UDP packet).
+    public func sendVoiceTunnel(_ datagram: Data) async throws {
+        try await send(.udpTunnel(datagram))
+    }
+
+    /// Asks the server to re-send its crypt nonce (empty CryptSetup); the
+    /// reply arrives as `.cryptSetupChanged`.
+    public func requestCryptResync() async throws {
+        try await send(.cryptSetup(MumbleProto_CryptSetup()))
+    }
+
     public func disconnect() async {
         await teardown(error: nil)
     }
@@ -222,12 +265,16 @@ public actor MumbleSession {
                 : MumbleVersion(v1: version.versionV1)
         case .cryptSetup(let crypt):
             // Full setup replaces; a nonce-only message is a resync update.
+            let hadSetup = cryptSetup != nil
             if crypt.hasKey {
                 cryptSetup = crypt
             } else if var existing = cryptSetup {
                 if crypt.hasServerNonce { existing.serverNonce = crypt.serverNonce }
                 if crypt.hasClientNonce { existing.clientNonce = crypt.clientNonce }
                 cryptSetup = existing
+            }
+            if hadSetup, let merged = cryptSetup {
+                eventContinuation.yield(.cryptSetupChanged(merged))
             }
         case .channelState(let channelState):
             state.apply(channelState)
