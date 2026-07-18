@@ -16,11 +16,21 @@ planned for older servers.
     jitter buffer.
 - (planned) `App/` — the SwiftUI multiplatform app.
 
-## Development
+## Building
+
+Prerequisites: Xcode 26+, `brew install opus` (protobuf/xcodegen only
+needed when regenerating).
+
+**App**: open `App/MumbleSwiftUI.xcodeproj`, scheme `MumbleSwiftUI`, ⌘R.
+The project is generated from `App/project.yml` — edit that and rerun
+`xcodegen generate` rather than editing project settings directly.
+
+**Core package tests**:
 
 ```sh
 cd MumbleCore
-swift test
+swift test                        # unit tests
+MUMBLE_INTEGRATION=1 swift test   # + live-server tests (needs local server)
 ```
 
 Regenerate protobufs after updating the vendored `.proto` files
@@ -41,3 +51,12 @@ docker run -d --name mumble-test -p 64738:64738 -p 64738:64738/udp mumblevoip/mu
 - https://github.com/mumble-voip/mumble/tree/master/docs/dev/network-protocol
 - `src/Mumble.proto`, `src/MumbleUDP.proto`, `src/MumbleProtocol.{h,cpp}` in
   the upstream repo (BSD-licensed; vendored protos retain their headers).
+
+## License
+
+BSD 3-Clause (see `LICENSE`). Portions derived from the BSD-licensed
+[Mumble](https://github.com/mumble-voip/mumble) project — notably the
+OCB2-AES128 implementation and the vendored protocol definitions.
+`MumbleCore/Vendor/swift-protobuf` is Apple's
+[swift-protobuf](https://github.com/apple/swift-protobuf) (Apache-2.0),
+vendored unmodified.

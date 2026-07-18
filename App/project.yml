@@ -41,3 +41,12 @@ targets:
         com.apple.security.app-sandbox: true
         com.apple.security.network.client: true
         com.apple.security.device.audio-input: true
+schemes:
+  MumbleSwiftUI:
+    build:
+      targets:
+        MumbleSwiftUI: all
+    run:
+      config: Debug
+    archive:
+      config: Release
