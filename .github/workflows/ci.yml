@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-core:
+    name: MumbleCore tests (macOS)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Run unit tests
+        working-directory: MumbleCore
+        run: swift test
+
+  build-core-ios:
+    name: MumbleCore build (iOS)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build all products for iOS
+        working-directory: MumbleCore
+        run: |
+          for scheme in MumbleProtocol MumbleCrypto MumbleAudio MumbleConnection; do
+            xcodebuild build \
+              -scheme "$scheme" \
+              -destination 'generic/platform=iOS' \
+              -skipPackagePluginValidation \
+              CODE_SIGNING_ALLOWED=NO
+          done
+
+  build-app:
+    name: App build (macOS)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build MumbleSwiftUI.app
+        run: |
+          xcodebuild build \
+            -project App/MumbleSwiftUI.xcodeproj \
+            -scheme MumbleSwiftUI \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
