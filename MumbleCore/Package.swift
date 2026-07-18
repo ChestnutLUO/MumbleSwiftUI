@@ -9,6 +9,7 @@ let package = Package(
     ],
     products: [
         .library(name: "MumbleProtocol", targets: ["MumbleProtocol"]),
+        .library(name: "MumbleConnection", targets: ["MumbleConnection"]),
     ],
     dependencies: [
         // Vendored (1.38.1) because SwiftPM's full git clone of
@@ -24,9 +25,17 @@ let package = Package(
             ],
             exclude: ["Proto"]
         ),
+        .target(
+            name: "MumbleConnection",
+            dependencies: ["MumbleProtocol"]
+        ),
         .testTarget(
             name: "MumbleProtocolTests",
             dependencies: ["MumbleProtocol"]
+        ),
+        .testTarget(
+            name: "MumbleConnectionTests",
+            dependencies: ["MumbleConnection"]
         ),
     ]
 )
