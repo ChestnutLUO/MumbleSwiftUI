@@ -1,0 +1,399 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0BC2F5F8F88F3B9321840819 /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C985DAE52479B3910998FD3 /* SessionView.swift */; };
+		212958DC7C1FF96B6F28C93D /* MumbleConnection in Frameworks */ = {isa = PBXBuildFile; productRef = 4A980A151990DBB49C200762 /* MumbleConnection */; };
+		259584BC6C47689407D9707A /* MumbleCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = A74C3610994746E1F86A1013 /* MumbleCrypto */; };
+		2FA6FE829DF070C78468DA72 /* ServerConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */; };
+		3651AED00FDE7AF26DA4B1D2 /* MumbleProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 42254C990CEF5AC110020396 /* MumbleProtocol */; };
+		5F02466087C81D80336DC35E /* ChannelTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */; };
+		76ACFA8926EFBD78590FA8F2 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A09A1C577D99A683AE84E6 /* ChatView.swift */; };
+		8067DAC426CC455CCE685679 /* MumbleSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66877DAA4F479D3351BD59B /* MumbleSwiftUIApp.swift */; };
+		B2E39BB96FF383D207E15165 /* MumbleAudio in Frameworks */ = {isa = PBXBuildFile; productRef = D937D87D15CAA626C120A466 /* MumbleAudio */; };
+		E5E01621698469BE985C1125 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4981B820FE7F81C86F59A37 /* SessionController.swift */; };
+		ED6BC150C7901C68DE9C75EA /* VoiceReceiveController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2C985DAE52479B3910998FD3 /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConnectView.swift; sourceTree = "<group>"; };
+		6E6C45B31D9CA1389AE69E38 /* MumbleCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MumbleCore; path = ../MumbleCore; sourceTree = SOURCE_ROOT; };
+		7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceReceiveController.swift; sourceTree = "<group>"; };
+		A66877DAA4F479D3351BD59B /* MumbleSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MumbleSwiftUIApp.swift; sourceTree = "<group>"; };
+		AED926DD077B0EACBA7CEB27 /* MumbleSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MumbleSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9A09A1C577D99A683AE84E6 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTreeView.swift; sourceTree = "<group>"; };
+		F4981B820FE7F81C86F59A37 /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		34CEB97D2B0BCD7A6A433C2B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3651AED00FDE7AF26DA4B1D2 /* MumbleProtocol in Frameworks */,
+				212958DC7C1FF96B6F28C93D /* MumbleConnection in Frameworks */,
+				259584BC6C47689407D9707A /* MumbleCrypto in Frameworks */,
+				B2E39BB96FF383D207E15165 /* MumbleAudio in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		30DE6BBC6A1F9F3D5D870E56 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A66877DAA4F479D3351BD59B /* MumbleSwiftUIApp.swift */,
+				940F3591A079D786798D156B /* Models */,
+				46DB9DDA6EF2024AFBF16D54 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		46DB9DDA6EF2024AFBF16D54 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BED88C3AFD5968412202DAEA /* ChannelTreeView.swift */,
+				B9A09A1C577D99A683AE84E6 /* ChatView.swift */,
+				30553F98D8D1ABC96913AF23 /* ServerConnectView.swift */,
+				2C985DAE52479B3910998FD3 /* SessionView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		52FF3D6889EA0E00BB048AFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AED926DD077B0EACBA7CEB27 /* MumbleSwiftUI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		652EF6DDDBD8B018240BA960 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6E6C45B31D9CA1389AE69E38 /* MumbleCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		940F3591A079D786798D156B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F4981B820FE7F81C86F59A37 /* SessionController.swift */,
+				7161F6AEAD3DCDDBE673DE33 /* VoiceReceiveController.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A567AC78ADFE935178BCCFAC = {
+			isa = PBXGroup;
+			children = (
+				652EF6DDDBD8B018240BA960 /* Packages */,
+				30DE6BBC6A1F9F3D5D870E56 /* Sources */,
+				52FF3D6889EA0E00BB048AFA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		330D4F546BFBD2D5174438C3 /* MumbleSwiftUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63447A62454EC5A2FB715A3A /* Build configuration list for PBXNativeTarget "MumbleSwiftUI" */;
+			buildPhases = (
+				95D2A38ABB78FA64F09DBF16 /* Sources */,
+				34CEB97D2B0BCD7A6A433C2B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MumbleSwiftUI;
+			packageProductDependencies = (
+				42254C990CEF5AC110020396 /* MumbleProtocol */,
+				4A980A151990DBB49C200762 /* MumbleConnection */,
+				A74C3610994746E1F86A1013 /* MumbleCrypto */,
+				D937D87D15CAA626C120A466 /* MumbleAudio */,
+			);
+			productName = MumbleSwiftUI;
+			productReference = AED926DD077B0EACBA7CEB27 /* MumbleSwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A20C753A0C0FF3D9217EF1D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 99D9D62C1AF74C8D04863E9E /* Build configuration list for PBXProject "MumbleSwiftUI" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = A567AC78ADFE935178BCCFAC;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FF5A66D5EF85D4B3CB152ACD /* XCLocalSwiftPackageReference "../MumbleCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 52FF3D6889EA0E00BB048AFA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				330D4F546BFBD2D5174438C3 /* MumbleSwiftUI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95D2A38ABB78FA64F09DBF16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F02466087C81D80336DC35E /* ChannelTreeView.swift in Sources */,
+				76ACFA8926EFBD78590FA8F2 /* ChatView.swift in Sources */,
+				8067DAC426CC455CCE685679 /* MumbleSwiftUIApp.swift in Sources */,
+				2FA6FE829DF070C78468DA72 /* ServerConnectView.swift in Sources */,
+				E5E01621698469BE985C1125 /* SessionController.swift in Sources */,
+				0BC2F5F8F88F3B9321840819 /* SessionView.swift in Sources */,
+				ED6BC150C7901C68DE9C75EA /* VoiceReceiveController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		00BCFFB2EC91DC235F8A0819 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		5B37DA29AAA3DDBC07EE6B3E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6CD0F3C63228D3E2F69071B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MumbleSwiftUI.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MumbleSwiftUI uses the microphone to transmit your voice to the Mumble server.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited) /opt/homebrew/lib";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		DA47B275DA505C2949A7BF31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MumbleSwiftUI.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "MumbleSwiftUI uses the microphone to transmit your voice to the Mumble server.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited) /opt/homebrew/lib";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		63447A62454EC5A2FB715A3A /* Build configuration list for PBXNativeTarget "MumbleSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA47B275DA505C2949A7BF31 /* Debug */,
+				6CD0F3C63228D3E2F69071B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		99D9D62C1AF74C8D04863E9E /* Build configuration list for PBXProject "MumbleSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B37DA29AAA3DDBC07EE6B3E /* Debug */,
+				00BCFFB2EC91DC235F8A0819 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		FF5A66D5EF85D4B3CB152ACD /* XCLocalSwiftPackageReference "../MumbleCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MumbleCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		42254C990CEF5AC110020396 /* MumbleProtocol */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MumbleProtocol;
+		};
+		4A980A151990DBB49C200762 /* MumbleConnection */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MumbleConnection;
+		};
+		A74C3610994746E1F86A1013 /* MumbleCrypto */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MumbleCrypto;
+		};
+		D937D87D15CAA626C120A466 /* MumbleAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MumbleAudio;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 3A20C753A0C0FF3D9217EF1D /* Project object */;
+}

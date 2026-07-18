@@ -1,0 +1,43 @@
+name: MumbleSwiftUI
+options:
+  bundleIdPrefix: co.uint8
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  MumbleCore:
+    path: ../MumbleCore
+targets:
+  MumbleSwiftUI:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+    dependencies:
+      - package: MumbleCore
+        products:
+          - MumbleProtocol
+          - MumbleConnection
+          - MumbleCrypto
+          - MumbleAudio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.uint8.MumbleSwiftUI
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        ENABLE_HARDENED_RUNTIME: true
+        CODE_SIGN_IDENTITY: "-"
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "MumbleSwiftUI uses the microphone to transmit your voice to the Mumble server."
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        GENERATE_INFOPLIST_FILE: true
+        # Homebrew libopus (MumbleCore's COpus system library).
+        LIBRARY_SEARCH_PATHS: "$(inherited) /opt/homebrew/lib"
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+    entitlements:
+      path: MumbleSwiftUI.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.device.audio-input: true

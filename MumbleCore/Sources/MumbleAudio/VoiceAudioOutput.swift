@@ -54,6 +54,12 @@ public final class VoiceAudioOutput {
         speakerNode(for: sessionID).write(pcm)
     }
 
+    /// Samples queued but not yet rendered for a speaker — lets feeders
+    /// pace themselves against playback instead of guessing frame timing.
+    public func bufferedSamples(for sessionID: UInt32) -> Int {
+        withLock { speakers[sessionID] }?.ring.availableSamples ?? 0
+    }
+
     public func removeSpeaker(_ sessionID: UInt32) {
         let node: SpeakerNode? = withLock {
             speakers.removeValue(forKey: sessionID)

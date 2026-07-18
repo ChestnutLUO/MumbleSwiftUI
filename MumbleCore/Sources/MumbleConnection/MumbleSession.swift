@@ -61,6 +61,9 @@ public enum MumbleSessionEvent: Sendable {
     case serverStateChanged(MumbleServerState)
     case textMessage(MumbleProto_TextMessage)
     case permissionDenied(MumbleProto_PermissionDenied)
+    /// A voice datagram tunneled over TCP (`UDPTunnel`) — plaintext, same
+    /// format as a decrypted UDP packet. Arrives when UDP is blocked.
+    case voiceTunnel(Data)
     /// Connection ended; nil error means a clean disconnect.
     case disconnected(Error?)
 }
@@ -80,6 +83,8 @@ public actor MumbleSession {
     private let eventContinuation: AsyncStream<MumbleSessionEvent>.Continuation
 
     private let transport: any MumbleControlTransport
+    /// Set when the transport is our own TLS channel, for cert observation.
+    private let tlsChannel: TLSControlChannel?
     private var receiveTask: Task<Void, Never>?
     private var pingTask: Task<Void, Never>?
     private var syncContinuation: CheckedContinuation<MumbleServerSyncInfo, Error>?
@@ -90,20 +95,28 @@ public actor MumbleSession {
 
     /// Connects over TLS. For tests, use `init(configuration:transport:)`.
     public init(configuration: MumbleSessionConfiguration) {
-        self.init(
-            configuration: configuration,
-            transport: TLSControlChannel(
-                host: configuration.host,
-                port: configuration.port,
-                trustPolicy: configuration.trustPolicy
-            )
+        let channel = TLSControlChannel(
+            host: configuration.host,
+            port: configuration.port,
+            trustPolicy: configuration.trustPolicy
         )
+        self.configuration = configuration
+        self.transport = channel
+        self.tlsChannel = channel
+        (events, eventContinuation) = AsyncStream.makeStream(of: MumbleSessionEvent.self)
     }
 
     public init(configuration: MumbleSessionConfiguration, transport: any MumbleControlTransport) {
         self.configuration = configuration
         self.transport = transport
+        self.tlsChannel = nil
         (events, eventContinuation) = AsyncStream.makeStream(of: MumbleSessionEvent.self)
+    }
+
+    /// SHA-256 of the server's TLS leaf certificate, once connected over
+    /// TLS. Persist and pin for trust-on-first-use.
+    public var serverCertificateSHA256: Data? {
+        tlsChannel?.serverCertificateSHA256
     }
 
     /// Opens the transport, performs the handshake, and returns once the
@@ -240,6 +253,8 @@ public actor MumbleSession {
             finishHandshakeIfPending(
                 with: .failure(
                     MumbleSessionError.rejected(type: reject.type, reason: reject.reason)))
+        case .udpTunnel(let datagram):
+            eventContinuation.yield(.voiceTunnel(datagram))
         case .textMessage(let text):
             eventContinuation.yield(.textMessage(text))
         case .permissionDenied(let denied):
