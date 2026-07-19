@@ -26,10 +26,25 @@ struct ServerConnectView: View {
 
             Form {
                 TextField("Server", text: $host, prompt: Text("mumble.example.com"))
+                    #if os(iOS)
+                        .keyboardType(.URL)
+                        .textContentType(.URL)
+                    #endif
                 TextField("Port", text: $portText)
+                    #if os(iOS)
+                        .keyboardType(.numberPad)
+                    #endif
                 TextField("Username", text: $username)
+                    #if os(iOS)
+                        .textContentType(.nickname)
+                    #endif
                 SecureField("Password (optional)", text: $password)
             }
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .scrollDismissesKeyboard(.interactively)
+            #endif
             .formStyle(.grouped)
             .frame(maxWidth: 380)
             .onSubmit { if canConnect { connect() } }
@@ -52,8 +67,11 @@ struct ServerConnectView: View {
             .controlSize(.large)
             .disabled(!canConnect)
         }
-        .padding(40)
-        .frame(minWidth: 480, minHeight: 520)
+        .padding(.vertical, 24)
+        #if os(macOS)
+            .padding(.horizontal, 40)
+            .frame(minWidth: 480, minHeight: 520)
+        #endif
     }
 
     private func connect() {

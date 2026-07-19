@@ -20,6 +20,9 @@ struct ChatView: View {
                         proxy.scrollTo(last.id, anchor: .bottom)
                     }
                 }
+                #if os(iOS)
+                    .scrollDismissesKeyboard(.interactively)
+                #endif
             }
 
             Divider()
@@ -44,6 +47,10 @@ struct ChatView: View {
                 TextField("Message", text: $draft, prompt: Text(prompt))
                     .textFieldStyle(.plain)
                     .onSubmit(send)
+                    #if os(iOS)
+                        .submitLabel(.send)
+                        .textInputAutocapitalization(.sentences)
+                    #endif
                 Button("Send", systemImage: "paperplane.fill", action: send)
                     .labelStyle(.iconOnly)
                     .buttonStyle(.borderless)
