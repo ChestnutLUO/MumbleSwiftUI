@@ -33,7 +33,7 @@ struct ChatView: View {
                     Button("Back to channel") {
                         controller.chatTarget = .currentChannel
                     }
-                    .buttonStyle(.link)
+                    .buttonStyle(.borderless)
                     .font(.caption)
                 }
                 .padding(.horizontal, 10)

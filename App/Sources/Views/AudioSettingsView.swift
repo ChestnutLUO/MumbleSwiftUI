@@ -60,7 +60,9 @@ struct AudioSettingsView: View {
             }
             .padding(12)
         }
-        .frame(width: 420)
+        #if os(macOS)
+            .frame(width: 420)
+        #endif
         .onChange(of: mode) { controller.applyAudioPreferences() }
         .onChange(of: bitrate) { controller.applyAudioPreferences() }
         .onChange(of: vadThresholdDB) { controller.applyAudioPreferences() }

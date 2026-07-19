@@ -3,6 +3,10 @@ import MumbleAudio
 import MumbleConnection
 import MumbleProtocol
 
+#if os(iOS)
+    import AVFAudio
+#endif
+
 enum TransmitMode: String, CaseIterable, Identifiable {
     case continuous
     case voiceActivity
@@ -86,6 +90,16 @@ actor VoiceController {
         self.requestCryptResync = requestCryptResync
         self.onSpeakingChanged = onSpeakingChanged
         self.onSelfActivity = onSelfActivity
+
+        #if os(iOS)
+            // Mic + speaker simultaneously; voiceChat mode enables the
+            // system echo canceller and routes to the receiver/speaker.
+            let audioSession = AVAudioSession.sharedInstance()
+            try? audioSession.setCategory(
+                .playAndRecord, mode: .voiceChat,
+                options: [.defaultToSpeaker, .allowBluetoothHFP])
+            try? audioSession.setActive(true)
+        #endif
 
         do {
             try output.start()

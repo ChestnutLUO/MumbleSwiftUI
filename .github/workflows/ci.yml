@@ -51,3 +51,16 @@ jobs:
             -scheme MumbleSwiftUI \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO
+
+  build-app-ios:
+    name: App build (iOS)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build MumbleSwiftUI-iOS
+        run: |
+          xcodebuild build \
+            -project App/MumbleSwiftUI.xcodeproj \
+            -scheme MumbleSwiftUI-iOS \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO

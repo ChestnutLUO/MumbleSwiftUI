@@ -14,13 +14,15 @@ struct SessionView: View {
             ChatView()
         }
         .toolbar {
-            ToolbarItem(placement: .status) {
-                if let info = controller.syncInfo, !info.welcomeText.isEmpty {
-                    Text(plainText(fromHTML: info.welcomeText))
-                        .lineLimit(1)
-                        .foregroundStyle(.secondary)
+            #if os(macOS)
+                ToolbarItem(placement: .status) {
+                    if let info = controller.syncInfo, !info.welcomeText.isEmpty {
+                        Text(plainText(fromHTML: info.welcomeText))
+                            .lineLimit(1)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-            }
+            #endif
             ToolbarItemGroup(placement: .primaryAction) {
                 if transmitMode == TransmitMode.pushToTalk.rawValue {
                     PushToTalkButton()

@@ -24,7 +24,8 @@ planned for older servers.
     session state machine.
   - `MumbleAudio` — Opus encode/decode (vendored libopus), mic capture,
     AVAudioEngine playback, jitter buffer, voice activity detection.
-- `App/` — the SwiftUI app (macOS; iOS target planned).
+- `App/` — the SwiftUI app. Targets: `MumbleSwiftUI` (macOS) and
+  `MumbleSwiftUI-iOS` (iPhone/iPad).
 
 ## Building
 
@@ -32,9 +33,14 @@ Prerequisites: Xcode 26+. No Homebrew dependencies — libopus is
 vendored and compiled from source for macOS, iOS, and simulator
 (protobuf/xcodegen only needed when regenerating).
 
-**App**: open `App/MumbleSwiftUI.xcodeproj`, scheme `MumbleSwiftUI`, ⌘R.
+**App**: open `App/MumbleSwiftUI.xcodeproj`, scheme `MumbleSwiftUI`
+(macOS) or `MumbleSwiftUI-iOS` (iPhone/iPad), ⌘R.
 The project is generated from `App/project.yml` — edit that and rerun
 `xcodegen generate` rather than editing project settings directly.
+
+Running the iOS app on a real device requires a development team:
+select yours under Signing & Capabilities (or set `DEVELOPMENT_TEAM`
+in `project.yml`). The simulator needs no signing.
 
 **Core package tests**:
 
