@@ -318,7 +318,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.a5-p.MumbleSwiftUI";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;
 			};
@@ -341,7 +341,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.uint8.MumbleSwiftUI;
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.a5-p.MumbleSwiftUI";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 6.0;

@@ -1,6 +1,6 @@
 name: MumbleSwiftUI
 options:
-  bundleIdPrefix: co.uint8
+  bundleIdPrefix: cn.a5-p
   deploymentTarget:
     macOS: "14.0"
 packages:
@@ -21,7 +21,7 @@ targets:
           - MumbleAudio
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: co.uint8.MumbleSwiftUI
+        PRODUCT_BUNDLE_IDENTIFIER: cn.a5-p.MumbleSwiftUI
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
